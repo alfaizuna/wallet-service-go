@@ -22,3 +22,5 @@ migrate-new:
 
 run-api:
 	go run ./cmd/api
+test:
+	go test ./... -race -count=1
