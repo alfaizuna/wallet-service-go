@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"log/slog"
+	"net/http"
 	"os"
 
+	"github.com/alfaizuna/wallet-service-go/internal/httpx"
 	"github.com/alfaizuna/wallet-service-go/internal/platform/config"
 	"github.com/alfaizuna/wallet-service-go/internal/platform/logger"
 )
@@ -25,6 +27,13 @@ func run() error {
 	log := logger.New(cfg.Env, cfg.LogLevel)
 	slog.SetDefault(log)
 
+	router := httpx.NewRouter(log)
+
+	srv := &http.Server{
+		Addr:    cfg.HTTPAddr,
+		Handler: router,
+	}
+
 	log.Info("api starting", "env", cfg.Env, "addr", cfg.HTTPAddr)
-	return nil
+	return srv.ListenAndServe()
 }
